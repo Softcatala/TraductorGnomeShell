@@ -116,8 +116,7 @@ TranslateText.prototype =
     // Bottom section
     let bottomSection = new PopupMenu.PopupMenuSection();
     
-    this.newText = new St.Entry(
-    {
+    this.newText = new St.Entry({
       name: "textEntry",
       hint_text: 'Type the text to translate',
       track_hover: true,
@@ -126,33 +125,33 @@ TranslateText.prototype =
 
     let entryText = this.newText.clutter_text;
     entryText.connect('key-press-event', function(o,e){
-        let symbol = e.get_key_symbol();
-        if (symbol == Clutter.Return)
-        {
-          text1 = o.get_text();
+      let symbol = e.get_key_symbol();
+      if (symbol == Clutter.Return)
+      {
+        let  textToTranslate = o.get_text();
 
-          /* Get the string and translate */
-          let url = SCURL+selectedLangPair+'&q='+text1;
-          global.log(selectedLangPair);
-          var request = Soup.Message.new('GET', url);
-          _httpSession.queue_message(request, function(_httpSession, message) {
+        /* Get the string and translate */
+        let url = SCURL+selectedLangPair+'&q='+textToTranslate;
+        global.log(selectedLangPair);
+        var request = Soup.Message.new('GET', url);
+        _httpSession.queue_message(request, function(_httpSession, message) {
 
-            if (message.status_code !== 200) {
-              text1 = 'Something went wrong (received status was not 200)';
-            }
+          if (message.status_code !== 200) {
+            textTranslated = 'Something went wrong (received status was not 200)';
+          }
 
-            var translatedText = request.response_body.data;
-            var translation = JSON.parse(translatedText);
+          var translatedText = request.response_body.data;
+          var translation = JSON.parse(translatedText);
 
 
-            if (translation.responseData.translatedText)
-              text1 = translation.responseData.translatedText;
-            else
-              text1 = 'Something went wrong (probably the langpair was not properly selected)';
+          if (translation.responseData.translatedText)
+            textTranslated = translation.responseData.translatedText;
+          else
+            textTranslated = 'Something went wrong (probably the langpair was not properly selected)';
 
-            showMessage(text1);
+          showMessage(textTranslated);
 
-           traductorMenu.close(); 
+          traductorMenu.close(); 
         });
       }
     });
@@ -162,20 +161,18 @@ TranslateText.prototype =
     traductorMenu.addMenuItem(bottomSection);
   },
 
-  _changeLangPair: function(item) {
+  _changeLangPair: function(item){
     //Retrieve the item position
     let activeitem = item._activeItemPos;
     this._setLangPair(activeitem);
   },
   
 
-  _translate: function()
-  {
+  _translate: function(){
     
   },
 
-  _setLangPair: function(activeitem)
-  {
+  _setLangPair: function(activeitem){
     let langpaircode;
     switch(activeitem)
     {
@@ -208,28 +205,24 @@ TranslateText.prototype =
     selectedLangPair = langpaircode;
   },
 
-  _hideMessage: function() 
-  {
+  _hideMessage: function(){
       Main.uiGroup.remove_actor(text);
       text = null;
   },
   
-  enable: function()
-  {
+  enable: function(){
     Main.panel._rightBox.insert_child_at_index(this.actor, 0);
     Main.panel._menus.addMenu(this.menu);
   },
 
-  disable: function()
-  {
+  disable: function(){
     Main.panel._menus.removeMenu(this.menu);
     Main.panel._rightBox.remove_actor(this.actor);
     this.monitor.cancel();
   }
 }
 
-function showMessage(text)
-{
+function showMessage(text){
     global.log("_myNotify called: " + text);
  
     let source = new MessageTray.SystemNotificationSource();
@@ -240,7 +233,6 @@ function showMessage(text)
 }
 
 // Init function
-function init(metadata) 
-{   
+function init(metadata){   
   return new TranslateText(metadata);
 }
