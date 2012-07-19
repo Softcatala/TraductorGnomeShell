@@ -1,4 +1,3 @@
-
 const St = imports.gi.St;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
@@ -14,7 +13,8 @@ const Soup = imports.gi.Soup;
 const _httpSession = new Soup.SessionAsync();
 Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefault());
 
-const SCURL = 'http://www.softcatala.org/apertium/json/translate?markUnknown=yes&key=NWI0MjQwMzQ2MzYyMzEzNjMyNjQ&langpair=';
+const apiKey = 'NzFkNTc4NTQ0OWI1MDY0ZTk3ZDF';
+const SCURL = 'http://www.softcatala.org/apertium/json/translate?markUnknown=yes&key='+apiKey+'&langpair=';
 var selectedLangPair = 'en|ca';
 
 let text, button;
