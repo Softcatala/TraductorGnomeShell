@@ -64,7 +64,7 @@ TranslateText.prototype =
     this.buttonText.get_parent().add_style_class_name("panelButtonWidth");
     this._selectedLangPair = 'ca|es';
 
-    let tasksMenu = this.menu;
+    let traductorMenu = this.menu;
     let buttonText = this.buttonText;
 
     // Separator
@@ -110,13 +110,13 @@ TranslateText.prototype =
 
     this._combo.setActiveItem(0);
     
-    tasksMenu.addMenuItem(this._combo);
-    tasksMenu.addMenuItem(this.Separator);
+    traductorMenu.addMenuItem(this._combo);
+    traductorMenu.addMenuItem(this.Separator);
     
     // Bottom section
     let bottomSection = new PopupMenu.PopupMenuSection();
     
-    this.newTask = new St.Entry(
+    this.newText = new St.Entry(
     {
       name: "textEntry",
       hint_text: 'Type the text to translate',
@@ -124,8 +124,8 @@ TranslateText.prototype =
       can_focus: true
     });
 
-    let entryNewTask = this.newTask.clutter_text;
-    entryNewTask.connect('key-press-event', function(o,e){
+    let entryText = this.newText.clutter_text;
+    entryText.connect('key-press-event', function(o,e){
         let symbol = e.get_key_symbol();
         if (symbol == Clutter.Return)
         {
@@ -152,14 +152,14 @@ TranslateText.prototype =
 
             showMessage(text1);
 
-           tasksMenu.close(); 
+           traductorMenu.close(); 
         });
       }
     });
     
-    bottomSection.actor.add_actor(this.newTask);
+    bottomSection.actor.add_actor(this.newText);
     bottomSection.actor.add_style_class_name("newTranslateSection");
-    tasksMenu.addMenuItem(bottomSection);
+    traductorMenu.addMenuItem(bottomSection);
   },
 
   _changeLangPair: function(item) {
