@@ -67,7 +67,6 @@ TranslateText.prototype =
 
     // Separator
     this.Separator = new PopupMenu.PopupSeparatorMenuItem();
-
     this._combo = new PopupMenu.PopupComboBoxMenuItem({ style_class: 'status-chooser-combo' });
     
     //Langpairs
@@ -100,8 +99,7 @@ TranslateText.prototype =
     });
 
     let entryNewTask = this.newTask.clutter_text;
-    entryNewTask.connect('key-press-event', function(o,e)
-    {
+    entryNewTask.connect('key-press-event', function(o,e){
         let symbol = e.get_key_symbol();
         if (symbol == Clutter.Return)
         {
@@ -111,7 +109,6 @@ TranslateText.prototype =
           var request = Soup.Message.new('GET', SCURL+'ca|es&q='+text1);
           _httpSession.queue_message(request, function(_httpSession, message) {
 
-            // text2 = message.status_code
             if (message.status_code !== 200) {
               text1 = 'missatge no 200';
             }
@@ -161,29 +158,17 @@ TranslateText.prototype =
   
   enable: function()
   {
-    // Main.panel.addToStatusArea('tasks', this);  // how to destroy that correctly?
     Main.panel._rightBox.insert_child_at_index(this.actor, 0);
     Main.panel._menus.addMenu(this.menu);
-    
-    // Refresh menu
-    //let fileM = Gio.file_new_for_path(this.file);
-    // this.monitor = fileM.monitor(Gio.FileMonitorFlags.NONE, null);
-    // this.monitor.connect('changed', Lang.bind(this, this._refresh));
   },
 
   disable: function()
   {
     Main.panel._menus.removeMenu(this.menu);
-    // Main.panel._statusArea['tasks'].destroy();
     Main.panel._rightBox.remove_actor(this.actor);
     this.monitor.cancel();
   }
 }
-
-// function _hideHello() {
-//   Main.uiGroup.remove_actor(text);
-//   text = null;
-// }
 
 function _myNotify(text)
 {
@@ -213,6 +198,7 @@ function showMessage(message)
                      transition: 'easeOutQuad',
                      onComplete: this._hideMessage });
 }
+
 // Init function
 function init(metadata) 
 {   
