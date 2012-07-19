@@ -18,5 +18,5 @@ INSTALL
 
 1. Download the main folder (traductorgnomeshell@softcatala.org)
 2. Place it on your /home/user/.local/share/gnome-shell/extensions folder
-3. Open gnome-tweak go to the "Extensions" tab and enable the "Traductor Gnome-Shell" extension
+3. Open gnome-tweak-tool, go to the "Extensions" tab and enable the "Traductor Gnome-Shell" extension
 
