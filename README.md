@@ -23,6 +23,7 @@ INSTALL
 
 TODO
 
+* Clean and restructure code
 * Copy the translated text to the clipboard
 * Add new langpairs (note that this depend on the server that is being used)
 * Add translations to the interface (there are no too many strings, but it'd be nice)
