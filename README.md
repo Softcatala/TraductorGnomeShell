@@ -21,7 +21,7 @@ INSTALL
 3. Open gnome-tweak-tool, go to the "Extensions" tab and enable the "Traductor Gnome-Shell" extension
 
 
-THINGS I'D LIKE THIS EXTENSION DO...
+TODO
 
 * Copy the translated text to the clipboard
 * Add new langpairs (note that this depend on the server that is being used)
