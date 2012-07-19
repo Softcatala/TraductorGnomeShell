@@ -15,6 +15,7 @@ const _httpSession = new Soup.SessionAsync();
 Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefault());
 
 const SCURL = 'http://www.softcatala.org/apertium/json/translate?markUnknown=yes&key=NWI0MjQwMzQ2MzYyMzEzNjMyNjQ&langpair=';
+var selectedLangPair = 'en|ca';
 
 let text, button;
 
@@ -61,6 +62,7 @@ TranslateText.prototype =
     this.buttonText.set_style("text-align:center;");
     this.actor.add_actor(this.buttonText);
     this.buttonText.get_parent().add_style_class_name("panelButtonWidth");
+    this._selectedLangPair = 'ca|es';
 
     let tasksMenu = this.menu;
     let buttonText = this.buttonText;
@@ -72,18 +74,42 @@ TranslateText.prototype =
     //Langpairs
     let item;
 
-    item = new LangPair("ca > es", 'user-available');
+    item = new LangPair("en > ca", 'user-available');
     this._combo.addMenuItem(item, 0);
+    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair("es > ca", 'user-invisible');
+    item = new LangPair("ca > en", 'user-invisible');
     this._combo.addMenuItem(item, 1);
+    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair("en > ca", 'user-away');
+    item = new LangPair("ca > es", 'user-away');
     this._combo.addMenuItem(item, 2);
+    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
+
+    item = new LangPair("es > ca", 'user-away');
+    this._combo.addMenuItem(item, 3);
+    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
+
+    item = new LangPair("fr > ca", 'user-away');
+    this._combo.addMenuItem(item, 4);
+    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
+
+    item = new LangPair("ca > fr", 'user-away');
+    this._combo.addMenuItem(item, 5);
+    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
+
+    item = new LangPair("pt > ca", 'user-away');
+    this._combo.addMenuItem(item, 6);
+    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
+
+    item = new LangPair("ca > pt", 'user-away');
+    this._combo.addMenuItem(item, 7);
+    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
     this._combo.connect('active-item-changed', Lang.bind(this, this._changeLangPair));
 
     this._combo.setActiveItem(0);
+    
     tasksMenu.addMenuItem(this._combo);
     tasksMenu.addMenuItem(this.Separator);
     
@@ -92,8 +118,8 @@ TranslateText.prototype =
     
     this.newTask = new St.Entry(
     {
-      name: "newTaskEntry",
-      hint_text: 'Nova entrada',
+      name: "textEntry",
+      hint_text: 'Type the text to translate',
       track_hover: true,
       can_focus: true
     });
@@ -106,11 +132,13 @@ TranslateText.prototype =
           text1 = o.get_text();
 
           /* Get the string and translate */
-          var request = Soup.Message.new('GET', SCURL+'ca|es&q='+text1);
+          let url = SCURL+selectedLangPair+'&q='+text1;
+          global.log(selectedLangPair);
+          var request = Soup.Message.new('GET', url);
           _httpSession.queue_message(request, function(_httpSession, message) {
 
             if (message.status_code !== 200) {
-              text1 = 'missatge no 200';
+              text1 = 'Something went wrong (received status was not 200)';
             }
 
             var translatedText = request.response_body.data;
@@ -120,10 +148,9 @@ TranslateText.prototype =
             if (translation.responseData.translatedText)
               text1 = translation.responseData.translatedText;
             else
-              text1 = 'No tira';
+              text1 = 'Something went wrong (probably the langpair was not properly selected)';
 
             showMessage(text1);
-            _myNotify(text1);
 
            tasksMenu.close(); 
         });
@@ -131,12 +158,14 @@ TranslateText.prototype =
     });
     
     bottomSection.actor.add_actor(this.newTask);
-    bottomSection.actor.add_style_class_name("newTaskSection");
+    bottomSection.actor.add_style_class_name("newTranslateSection");
     tasksMenu.addMenuItem(bottomSection);
   },
 
-  _changeLangPair: function(menuItem, id) {
-        showMessage(menuItem);
+  _changeLangPair: function(item) {
+    //Retrieve the item position
+    let activeitem = item._activeItemPos;
+    this._setLangPair(activeitem);
   },
   
 
@@ -145,9 +174,38 @@ TranslateText.prototype =
     
   },
 
-  _selectPair: function()
+  _setLangPair: function(activeitem)
   {
-    this._visibilityItems('name', 'prova');
+    let langpaircode;
+    switch(activeitem)
+    {
+      case 0:
+         langpaircode = 'ca|en';
+        break;
+      case 1:
+        langpaircode = 'en|ca';
+        break;
+      case 2:
+        langpaircode = 'ca|es';
+        break;
+      case 3:
+        langpaircode = 'es|ca';
+        break;
+      case 4:
+        langpaircode = 'fr|ca';
+        break;
+      case 5:
+        langpaircode = 'ca|fr';
+        break;
+      case 6:
+        langpaircode = 'pt|ca';
+        break;
+      case 7:
+        langpaircode = 'ca|pt';
+        break;
+    }
+
+    selectedLangPair = langpaircode;
   },
 
   _hideMessage: function() 
@@ -170,7 +228,7 @@ TranslateText.prototype =
   }
 }
 
-function _myNotify(text)
+function showMessage(text)
 {
     global.log("_myNotify called: " + text);
  
@@ -179,24 +237,6 @@ function _myNotify(text)
     let notification = new MessageTray.Notification(source, text, null);
     notification.setTransient(true);
     source.notify(notification);
-}
-
-function showMessage(message)
-{
-  text = new St.Label({ style_class: 'helloworld-label', text: message });
-  Main.uiGroup.add_actor(text);
-  text.opacity = 255;
-
-  let monitor = Main.layoutManager.primaryMonitor;
-
-  text.set_position(Math.floor(monitor.width / 2 - text.width / 2),
-                    Math.floor(monitor.height / 2 - text.height / 2));
-
-  Tweener.addTween(text,
-                   { opacity: 0,
-                     time: 2,
-                     transition: 'easeOutQuad',
-                     onComplete: this._hideMessage });
 }
 
 // Init function

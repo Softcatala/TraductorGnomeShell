@@ -1,4 +1,4 @@
-.newTaskSection {
+.newTranslateSection {
 	padding:0 12px;
 }
 
@@ -8,7 +8,7 @@
 
 /* Same style as #searchEntry on theme/gnome-shell.css */
 
-#newTaskEntry {
+#textEntry {
 	padding: 4px 12px;
 	border-radius: 17px;
 	color: rgb(128, 128, 128);
@@ -24,19 +24,19 @@
 	box-shadow: inset 0px 2px 4px rgba(0,0,0,0.6);
 }
 
-#newTaskEntry:focus,
-#newTaskEntry:hover {
+#textEntry:focus,
+#textEntry:hover {
 	border: 2px solid rgb(136,138,133);
 	background-gradient-start: rgb(200,200,200);
 	background-gradient-end: white;
 	background-gradient-direction: vertical;
 }
 
-#newTaskEntry:hover {
+#textEntry:hover {
 	transition-duration: 300;
 }
 
-#newTaskEntry:focus {
+#textEntry:focus {
 	color: rgb(64, 64, 64);
 	font-weight: bold;
 	transition-duration: 0;

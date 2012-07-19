@@ -1,1 +1,10 @@
-{"shell-version": ["3.4.1"], "uuid": "traductorgnomeshell@softcatala.org", "name": "Traductor Gnome-Shell", "description": "This is a gnome-shell extension that let users enter a text, select the language pair for the translation and translate the text."}
+{
+	"shell-version": [
+	    "3.4",
+	    "3.4.1"
+	  ],
+	"uuid": "traductorgnomeshell@softcatala.org", 
+	"name": "Traductor Gnome-Shell", 
+	"url" : "https://github.com/Softcatala/TraductorGnomeShell",
+	"description": "This is a gnome-shell extension that let users enter a text, select the language pair for the translation and translate the text."
+}
