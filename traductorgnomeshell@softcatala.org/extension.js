@@ -222,9 +222,7 @@ TranslateText.prototype =
   }
 }
 
-function showMessage(text){
-    global.log("_myNotify called: " + text);
- 
+function showMessage(text){ 
     let source = new MessageTray.SystemNotificationSource();
     Main.messageTray.add(source);
     let notification = new MessageTray.Notification(source, text, null);
