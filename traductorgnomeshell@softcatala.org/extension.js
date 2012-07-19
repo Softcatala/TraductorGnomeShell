@@ -74,11 +74,11 @@ TranslateText.prototype =
     //Langpairs
     let item;
 
-    item = new LangPair("en > ca", 'user-available');
+    item = new LangPair("en > ca", 'user-away');
     this._combo.addMenuItem(item, 0);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair("ca > en", 'user-invisible');
+    item = new LangPair("ca > en", 'user-away');
     this._combo.addMenuItem(item, 1);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
