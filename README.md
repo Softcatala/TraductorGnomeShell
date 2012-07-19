@@ -20,3 +20,9 @@ INSTALL
 2. Place it on your /home/user/.local/share/gnome-shell/extensions folder
 3. Open gnome-tweak-tool, go to the "Extensions" tab and enable the "Traductor Gnome-Shell" extension
 
+
+THINGS I'D LIKE THIS EXTENSION DO...
+
+* Copy the translated text to the clipboard
+* Add new langpairs (note that this depend on the server that is being used)
+* Add translations to the interface (there are no too many strings, but it'd be nice)
