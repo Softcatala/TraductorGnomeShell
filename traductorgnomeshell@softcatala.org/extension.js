@@ -11,17 +11,23 @@ const Shell = imports.gi.Shell;
 const Tweener = imports.ui.tweener;
 const Soup = imports.gi.Soup;
 const _httpSession = new Soup.SessionAsync();
-Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefault());
+
+const Gettext = imports.gettext;
+const _ = Gettext.domain('traductorgnomeshell').gettext;
 
 const apiKey = 'NzFkNTc4NTQ0OWI1MDY0ZTk3ZDF';
 const SCURL = 'http://www.softcatala.org/apertium/json/translate?markUnknown=yes&key='+apiKey+'&langpair=';
-var selectedLangPair = 'en|ca';
+Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefault());
 
+var selectedLangPair = 'en|ca';
 let text, button;
 
 // TranslateText function
 function TranslateText(metadata)
 { 
+  let locales = metadata.path + "/locale";
+  Gettext.bindtextdomain('traductorgnomeshell', locales);
+
   this._init();
 }
 
@@ -74,35 +80,35 @@ TranslateText.prototype =
     //Langpairs
     let item;
 
-    item = new LangPair("en > ca", 'user-away');
+    item = new LangPair(_("English » Catalan"), 'user-away');
     this._combo.addMenuItem(item, 0);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair("ca > en", 'user-away');
+    item = new LangPair(_("Catalan » English"), 'user-away');
     this._combo.addMenuItem(item, 1);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair("ca > es", 'user-away');
-    this._combo.addMenuItem(item, 2);
-    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
-
-    item = new LangPair("es > ca", 'user-away');
+    item = new LangPair(_("Spanish » Catalan"), 'user-away');
     this._combo.addMenuItem(item, 3);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair("fr > ca", 'user-away');
+    item = new LangPair(_("Catalan » Spanish"), 'user-away');
+    this._combo.addMenuItem(item, 2);
+    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
+
+    item = new LangPair(_("French » Catalan"), 'user-away');
     this._combo.addMenuItem(item, 4);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair("ca > fr", 'user-away');
+    item = new LangPair(_("Catalan » French"), 'user-away');
     this._combo.addMenuItem(item, 5);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair("pt > ca", 'user-away');
+    item = new LangPair(_("Portuguese » Catalan"), 'user-away');
     this._combo.addMenuItem(item, 6);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair("ca > pt", 'user-away');
+    item = new LangPair(_("Catalan » Portuguese"), 'user-away');
     this._combo.addMenuItem(item, 7);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
@@ -118,7 +124,7 @@ TranslateText.prototype =
     
     this.newText = new St.Entry({
       name: "textEntry",
-      hint_text: 'Type the text to translate',
+      hint_text: _("Type the text to translate"),
       track_hover: true,
       can_focus: true
     });
@@ -137,7 +143,7 @@ TranslateText.prototype =
         _httpSession.queue_message(request, function(_httpSession, message) {
 
           if (message.status_code !== 200) {
-            textTranslated = 'Something went wrong (received status was not 200)';
+            textTranslated = _("Something went wrong (received status was not 200)");
           }
 
           var translatedText = request.response_body.data;
@@ -147,7 +153,7 @@ TranslateText.prototype =
           if (translation.responseData.translatedText)
             textTranslated = translation.responseData.translatedText;
           else
-            textTranslated = 'Something went wrong (probably the langpair was not properly selected)';
+            textTranslated = _("Something went wrong (probably the langpair was not properly selected)");
 
           showMessage(textTranslated);
 
