@@ -19,7 +19,7 @@ const apiKey = 'NzFkNTc4NTQ0OWI1MDY0ZTk3ZDF';
 const SCURL = 'http://www.softcatala.org/apertium/json/translate?markUnknown=yes&key='+apiKey+'&langpair=';
 Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefault());
 
-var selectedLangPair = 'en|ca';
+var selectedLangPair = 'en|ca'; //Default langpair
 let text, button;
 
 // TranslateText function
@@ -68,7 +68,6 @@ TranslateText.prototype =
     this.buttonText.set_style("text-align:center;");
     this.actor.add_actor(this.buttonText);
     this.buttonText.get_parent().add_style_class_name("panelButtonWidth");
-    this._selectedLangPair = 'ca|es';
 
     let traductorMenu = this.menu;
     let buttonText = this.buttonText;
@@ -88,28 +87,32 @@ TranslateText.prototype =
     this._combo.addMenuItem(item, 1);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("Spanish » Catalan"), 'user-away');
-    this._combo.addMenuItem(item, 3);
-    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
-
     item = new LangPair(_("Catalan » Spanish"), 'user-away');
     this._combo.addMenuItem(item, 2);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("French » Catalan"), 'user-away');
+    item = new LangPair(_("Spanish » Catalan"), 'user-away');
+    this._combo.addMenuItem(item, 3);
+    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
+
+    item = new LangPair(_("Spanish » Catalan (Valencian)"), 'user-away');
     this._combo.addMenuItem(item, 4);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("Catalan » French"), 'user-away');
+    item = new LangPair(_("French » Catalan"), 'user-away');
     this._combo.addMenuItem(item, 5);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("Portuguese » Catalan"), 'user-away');
+    item = new LangPair(_("Catalan » French"), 'user-away');
     this._combo.addMenuItem(item, 6);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("Catalan » Portuguese"), 'user-away');
+    item = new LangPair(_("Portuguese » Catalan"), 'user-away');
     this._combo.addMenuItem(item, 7);
+    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
+
+    item = new LangPair(_("Catalan » Portuguese"), 'user-away');
+    this._combo.addMenuItem(item, 8);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
     this._combo.connect('active-item-changed', Lang.bind(this, this._changeLangPair));
@@ -195,15 +198,18 @@ TranslateText.prototype =
         langpaircode = 'es|ca';
         break;
       case 4:
-        langpaircode = 'fr|ca';
+        langpaircode = 'es|ca_valencia';
         break;
       case 5:
-        langpaircode = 'ca|fr';
+        langpaircode = 'fr|ca';
         break;
       case 6:
-        langpaircode = 'pt|ca';
+        langpaircode = 'ca|fr';
         break;
       case 7:
+        langpaircode = 'pt|ca';
+        break;
+      case 8:
         langpaircode = 'ca|pt';
         break;
     }
