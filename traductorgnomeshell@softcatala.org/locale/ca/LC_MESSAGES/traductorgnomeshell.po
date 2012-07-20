@@ -1,0 +1,50 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Pau Iranzo <paugnu@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: extension.js:122
+msgid "Type the text to translate"
+msgstr "Introduïu el text que s'ha de traduir"
+
+#: extension.js:83
+msgid "English » Catalan"
+msgstr "Anglès » Català"
+
+#: extension.js:87
+msgid "Catalan » English"
+msgstr "Català » Anglès"
+
+#: extension.js:91
+msgid "Spanish » Catalan"
+msgstr "Castellà » Català"
+
+#: extension.js:95
+msgid "Catalan » Spanish"
+msgstr "Català » Castellà"
+
+#: extension.js:99
+msgid "French » Catalan"
+msgstr "Francès » Català"
+
+#: extension.js:103
+msgid "Catalan » French"
+msgstr "Català » Francès"
+
+#: extension.js:107
+msgid "Portuguese » Catalan"
+msgstr "Portuguès » Català"
+
+#: extension.js:111
+msgid "Catalan » Portuguese"
+msgstr "Català » Portuguès"
+
+#: extension.js:111
+msgid "Something went wrong (received status was not 200)"
+msgstr "S'ha produït un error (el codi rebut no ha estat '200'"
