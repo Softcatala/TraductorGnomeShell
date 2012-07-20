@@ -3,7 +3,7 @@ TraductorGnomeShell
 
 This is a gnome-shell extension that let users enter a text, select the language pair for the translation and translate the text.
 
-At this moment, langugage pairs available are:
+At this moment, language pairs available are:
 
 * en - ca
 * fr - ca
@@ -23,7 +23,9 @@ INSTALL
 
 TODO
 
-* Clean and restructure code
+* Rename the language pairs to something more... human readable.
+* Clean and restructure code (in progress)
 * Copy the translated text to the clipboard
 * Add new langpairs (note that this depend on the server that is being used)
 * Add translations to the interface (there are no too many strings, but it'd be nice)
+* Let the user select which translation service to use
