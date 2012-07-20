@@ -13,38 +13,47 @@ msgstr ""
 msgid "Type the text to translate"
 msgstr "Introduïu el text que s'ha de traduir"
 
-#: extension.js:83
+#: extension.js:82
 msgid "English » Catalan"
 msgstr "Anglès » Català"
 
-#: extension.js:87
+#: extension.js:86
 msgid "Catalan » English"
 msgstr "Català » Anglès"
 
-#: extension.js:91
+#: extension.js:90
 msgid "Spanish » Catalan"
 msgstr "Castellà » Català"
 
-#: extension.js:95
+#: extension.js:94
+msgid "Spanish » Catalan (Valencian)"
+msgstr "Castellà » Català (valencià)"
+
+#: extension.js:98
 msgid "Catalan » Spanish"
 msgstr "Català » Castellà"
 
-#: extension.js:99
+#: extension.js:102
 msgid "French » Catalan"
 msgstr "Francès » Català"
 
-#: extension.js:103
+#: extension.js:106
 msgid "Catalan » French"
 msgstr "Català » Francès"
 
-#: extension.js:107
+#: extension.js:110
 msgid "Portuguese » Catalan"
 msgstr "Portuguès » Català"
 
-#: extension.js:111
+#: extension.js:114
 msgid "Catalan » Portuguese"
 msgstr "Català » Portuguès"
 
-#: extension.js:111
+#: extension.js:149
 msgid "Something went wrong (received status was not 200)"
 msgstr "S'ha produït un error (el codi rebut no ha estat '200'"
+
+#: extension.js:159
+msgid "Something went wrong (probably the langpair was not properly selected)"
+msgstr "S'ha produït un error (probablement el parell de llengües no s'ha seleccionat correctament)"
+

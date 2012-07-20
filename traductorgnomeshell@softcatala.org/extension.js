@@ -79,39 +79,39 @@ TranslateText.prototype =
     //Langpairs
     let item;
 
-    item = new LangPair(_("English Â» Catalan"), 'user-away');
+    item = new LangPair(_("English » Catalan"), 'user-away');
     this._combo.addMenuItem(item, 0);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("Catalan Â» English"), 'user-away');
+    item = new LangPair(_("Catalan » English"), 'user-away');
     this._combo.addMenuItem(item, 1);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("Catalan Â» Spanish"), 'user-away');
+    item = new LangPair(_("Catalan » Spanish"), 'user-away');
     this._combo.addMenuItem(item, 2);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("Spanish Â» Catalan"), 'user-away');
+    item = new LangPair(_("Spanish » Catalan"), 'user-away');
     this._combo.addMenuItem(item, 3);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("Spanish Â» Catalan (Valencian)"), 'user-away');
+    item = new LangPair(_("Spanish » Catalan (Valencian)"), 'user-away');
     this._combo.addMenuItem(item, 4);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("French Â» Catalan"), 'user-away');
+    item = new LangPair(_("French » Catalan"), 'user-away');
     this._combo.addMenuItem(item, 5);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("Catalan Â» French"), 'user-away');
+    item = new LangPair(_("Catalan » French"), 'user-away');
     this._combo.addMenuItem(item, 6);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("Portuguese Â» Catalan"), 'user-away');
+    item = new LangPair(_("Portuguese » Catalan"), 'user-away');
     this._combo.addMenuItem(item, 7);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("Catalan Â» Portuguese"), 'user-away');
+    item = new LangPair(_("Catalan » Portuguese"), 'user-away');
     this._combo.addMenuItem(item, 8);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
