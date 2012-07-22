@@ -2,10 +2,11 @@
 	"shell-version": [
 	    "3.4",
 	    "3.4.1",
+	    "3.4.2",
 	    "3.5.4"
 	  ],
 	"uuid": "traductorgnomeshell@softcatala.org", 
 	"name": "Traductor Gnome-Shell", 
 	"url" : "https://github.com/Softcatala/TraductorGnomeShell",
-	"description": "This is a gnome-shell extension that let users enter a text, select the language pair for the translation and translate the text."
+	"description": "This is a gnome-shell extension that let users enter a text very quickly using the Apertium.org translation server (it is not very fast, but it's a free software project we all should use)."
 }
