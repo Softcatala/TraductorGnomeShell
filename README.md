@@ -23,9 +23,9 @@ INSTALL
 
 TODO
 
-* Rename the language pairs to something more... human readable.
-* Clean and restructure code (in progress)
+* (done) Rename the language pairs to something more... human readable.
+* (in progress) Clean and restructure code
 * Copy the translated text to the clipboard
 * Add new langpairs (note that this depend on the server that is being used)
-* Add translations to the interface (there are no too many strings, but it'd be nice)
-* Let the user select which translation service to use
+* (done) Add translations to the interface (there are no too many strings, but it'd be nice)
+* Let the user select which translation service to use (apertium, softcatalà, google)
