@@ -5,10 +5,13 @@ This is a gnome-shell extension that let users enter a text, select the language
 
 At this moment, language pairs available are:
 
-* en - ca
-* fr - ca
-* es - ca
-* pt - ca
+* en ⇆ ca
+* en ⇆ es
+* fr ⇆ ca
+* fr ⇆ es
+* es ⇆ ca (and es » ca_valencia)
+* es ⇆ pt
+* pt ⇆ ca
 
 This extension uses the Softcatalà translator to retrieve the translations (www.softcatala.org/traductor).
 
@@ -23,9 +26,7 @@ INSTALL
 
 TODO
 
-* (done) Rename the language pairs to something more... human readable.
 * (in progress) Clean and restructure code
 * Copy the translated text to the clipboard
-* Add new langpairs (note that this depend on the server that is being used)
-* (done) Add translations to the interface (there are no too many strings, but it'd be nice)
+* (in progress) Add new langpairs (note that this depend on the server that is being used)
 * Let the user select which translation service to use (apertium, softcatalà, google)
