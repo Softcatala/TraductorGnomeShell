@@ -16,10 +16,14 @@ const Gettext = imports.gettext;
 const _ = Gettext.domain('traductorgnomeshell').gettext;
 
 const apiKey = 'NzFkNTc4NTQ0OWI1MDY0ZTk3ZDF';
+const apertiumKey = 'HXoGDcuXSAkpZuo8S/YbrsB9RA0';
 const SCURL = 'http://www.softcatala.org/apertium/json/translate?markUnknown=yes&key='+apiKey+'&langpair=';
+const SCAPERTIUM = 'http://api.apertium.org/json/translate?markUnknown=yes&key='+apertiumKey+'&langpair=';
 Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefault());
 
-var selectedLangPair = 'en|ca'; //Default langpair
+var languageFrom = 'en'; //Translate from English by default
+var languageTo = 'ca'; //Translate to Catalan by default
+
 let text, button;
 
 // TranslateText function
@@ -75,51 +79,65 @@ TranslateText.prototype =
     // Separator
     this.Separator = new PopupMenu.PopupSeparatorMenuItem();
     this._combo = new PopupMenu.PopupComboBoxMenuItem({ style_class: 'status-chooser-combo' });
+    this._comboTo = new PopupMenu.PopupComboBoxMenuItem({ style_class: 'status-chooser-combo' });
     
     //Langpairs
     let item;
 
-    item = new LangPair(_("English » Catalan"), 'user-away');
+    //Language to translate From
+    item = new LangPair(_("English"), 'user-available');
     this._combo.addMenuItem(item, 0);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("Catalan » English"), 'user-away');
+    item = new LangPair(_("Catalan"), 'user-available');
     this._combo.addMenuItem(item, 1);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("Catalan » Spanish"), 'user-away');
+    item = new LangPair(_("Spanish"), 'user-available');
     this._combo.addMenuItem(item, 2);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("Spanish » Catalan"), 'user-away');
+    item = new LangPair(_("French"), 'user-available');
     this._combo.addMenuItem(item, 3);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("Spanish » Catalan (Valencian)"), 'user-away');
+    item = new LangPair(_("Portuguese"), 'user-available');
     this._combo.addMenuItem(item, 4);
     this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("French » Catalan"), 'user-away');
-    this._combo.addMenuItem(item, 5);
-    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
+    //Language to translate To
+    item = new LangPair(_("English"), 'user-away');
+    this._comboTo.addMenuItem(item, 0);
+    this._comboTo._itemActivated(item, Lang.bind(this, this._changeLangPairTo));
 
-    item = new LangPair(_("Catalan » French"), 'user-away');
-    this._combo.addMenuItem(item, 6);
-    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
+    item = new LangPair(_("Catalan"), 'user-away');
+    this._comboTo.addMenuItem(item, 1);
+    this._comboTo._itemActivated(item, Lang.bind(this, this._changeLangPairTo));
 
-    item = new LangPair(_("Portuguese » Catalan"), 'user-away');
-    this._combo.addMenuItem(item, 7);
-    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
+    item = new LangPair(_("Catalan (Valencian)"), 'user-away');
+    this._comboTo.addMenuItem(item, 2);
+    this._comboTo._itemActivated(item, Lang.bind(this, this._changeLangPairTo));
 
-    item = new LangPair(_("Catalan » Portuguese"), 'user-away');
-    this._combo.addMenuItem(item, 8);
-    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
+    item = new LangPair(_("Spanish"), 'user-away');
+    this._comboTo.addMenuItem(item, 3);
+    this._comboTo._itemActivated(item, Lang.bind(this, this._changeLangPairTo));
+
+    item = new LangPair(_("French"), 'user-away');
+    this._comboTo.addMenuItem(item, 4);
+    this._comboTo._itemActivated(item, Lang.bind(this, this._changeLangPairTo));
+
+    item = new LangPair(_("Portuguese"), 'user-away');
+    this._comboTo.addMenuItem(item, 5);
+    this._comboTo._itemActivated(item, Lang.bind(this, this._changeLangPairTo));
 
     this._combo.connect('active-item-changed', Lang.bind(this, this._changeLangPair));
+    this._comboTo.connect('active-item-changed', Lang.bind(this, this._changeLangPairTo));
 
     this._combo.setActiveItem(0);
+    this._comboTo.setActiveItem(1);
     
     traductorMenu.addMenuItem(this._combo);
+    traductorMenu.addMenuItem(this._comboTo);
     traductorMenu.addMenuItem(this.Separator);
     
     // Bottom section
@@ -140,18 +158,36 @@ TranslateText.prototype =
         let  textToTranslate = o.get_text();
 
         /* Get the string and translate */
-        let url = SCURL+selectedLangPair+'&q='+textToTranslate;
-        global.log(selectedLangPair);
+        //let url = SCURL+languageFrom+'|'+languageTo+'&q='+textToTranslate;
+        let url = SCAPERTIUM+languageFrom+'|'+languageTo+'&q='+textToTranslate;
+        
         var request = Soup.Message.new('GET', url);
         _httpSession.queue_message(request, function(_httpSession, message) {
 
           if (message.status_code !== 200) {
-            textTranslated = _("Something went wrong (received status was not 200)");
+            switch (message.status_code){
+              case '400':
+                textTranslated = _("Bad parameters. A compulsory argument is missing, or there is an argument with wrong format. A more accurate description can be found in responseDetails field.");
+                break; 
+              case '451':
+                textTranslated = _("Not supported pair. The translation engine can't translate with the requested language pair.");
+                break;
+              case '452':
+                textTranslated = _("Not supported format. The translation engine doesn't recognize the requested format.");
+                break;
+              case '500':
+                textTranslated = _("Unexpected error. An unexpected error happened. Depending on the error, a more accurate description can be found in responseDetails field.");
+                break;
+              case '552':
+                textTranslated = _("The traffic limit for your IP or your user has been reached.");
+                break;
+            }
           }
 
           var translatedText = request.response_body.data;
           var translation = JSON.parse(translatedText);
 
+          global.log('hola');
 
           if (translation.responseData.translatedText)
             textTranslated = translation.responseData.translatedText;
@@ -175,6 +211,12 @@ TranslateText.prototype =
     let activeitem = item._activeItemPos;
     this._setLangPair(activeitem);
   },
+
+  _changeLangPairTo: function(item){
+    //Retrieve the item position
+    let activeitem = item._activeItemPos;
+    this._setLangPairTo(activeitem);
+  },
   
 
   _translate: function(){
@@ -183,39 +225,53 @@ TranslateText.prototype =
 
   _setLangPair: function(activeitem){
     let langpaircode;
-    switch(activeitem)
-    {
+    switch(activeitem){
       case 0:
-         langpaircode = 'ca|en';
+        langpaircode = 'en';
         break;
       case 1:
-        langpaircode = 'en|ca';
+        langpaircode = 'ca';
         break;
       case 2:
-        langpaircode = 'ca|es';
+        langpaircode = 'es';
         break;
       case 3:
-        langpaircode = 'es|ca';
+        langpaircode = 'fr';
         break;
       case 4:
-        langpaircode = 'es|ca_valencia';
-        break;
-      case 5:
-        langpaircode = 'fr|ca';
-        break;
-      case 6:
-        langpaircode = 'ca|fr';
-        break;
-      case 7:
-        langpaircode = 'pt|ca';
-        break;
-      case 8:
-        langpaircode = 'ca|pt';
+        langpaircode = 'pt';
         break;
     }
 
-    selectedLangPair = langpaircode;
+    languageFrom = langpaircode;
   },
+
+  _setLangPairTo: function(activeitem){
+    let langpaircode;
+    switch(activeitem){
+      case 0:
+         langpaircode = 'en';
+        break;
+      case 1:
+        langpaircode = 'ca';
+        break;
+      case 2:
+        langpaircode = 'ca_valencia';
+        break;
+      case 3:
+        langpaircode = 'es';
+        break;
+      case 4:
+        langpaircode = 'fr';
+        break;
+      case 5:
+        langpaircode = 'pt';
+        break;
+    }
+
+    languageTo = langpaircode;
+  },
+
 
   _hideMessage: function(){
       Main.uiGroup.remove_actor(text);
