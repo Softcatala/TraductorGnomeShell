@@ -162,35 +162,18 @@ TranslateText.prototype =
         let url = SCAPERTIUM+languageFrom+'|'+languageTo+'&q='+textToTranslate;
         
         var request = Soup.Message.new('GET', url);
+        
         _httpSession.queue_message(request, function(_httpSession, message) {
 
-          if (message.status_code !== 200) {
-            switch (message.status_code){
-              case '400':
-                textTranslated = _("Bad parameters. A compulsory argument is missing, or there is an argument with wrong format. A more accurate description can be found in responseDetails field.");
-                break; 
-              case '451':
-                textTranslated = _("Not supported pair. The translation engine can't translate with the requested language pair.");
-                break;
-              case '452':
-                textTranslated = _("Not supported format. The translation engine doesn't recognize the requested format.");
-                break;
-              case '500':
-                textTranslated = _("Unexpected error. An unexpected error happened. Depending on the error, a more accurate description can be found in responseDetails field.");
-                break;
-              case '552':
-                textTranslated = _("The traffic limit for your IP or your user has been reached.");
-                break;
-            }
-          }
-
-          var translatedText = request.response_body.data;
-          var translation = JSON.parse(translatedText);
-
-          global.log('hola');
-
-          if (translation.responseData.translatedText)
+          var serverresponse = request.response_body.data;
+          var translation = JSON.parse(serverresponse);
+          var status_code = translation.responseStatus;
+          var response_details = translation.responseDetails;
+          
+          if (translation.responseData.translatedText && status_code == 200)
             textTranslated = translation.responseData.translatedText;
+          else if (status_code != '200')
+            textTranslated = response_details;
           else
             textTranslated = _("Something went wrong (probably the langpair was not properly selected)");
 
