@@ -27,6 +27,6 @@ INSTALL
 TODO
 
 * (in progress) Clean and restructure code
-* Copy the translated text to the clipboard
+* (done) Copy the translated text to the clipboard
 * (in progress) Add new langpairs (note that this depends on the server that is being used)
 * Let the user select which translation service to use (apertium, softcatalà, google)
