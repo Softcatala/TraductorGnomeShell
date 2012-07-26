@@ -279,6 +279,8 @@ function showMessage(text){
     let notification = new MessageTray.Notification(source, text, null);
     notification.setTransient(true);
     source.notify(notification);
+
+    St.Clipboard.get_default().set_text(text);
 }
 
 // Init function

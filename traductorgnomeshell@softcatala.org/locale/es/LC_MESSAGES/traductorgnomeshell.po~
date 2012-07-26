@@ -1,0 +1,43 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Pau Iranzo <paugnu@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: extension.js:122
+msgid "Type the text to translate"
+msgstr "Introduïu el text que s'ha de traduir"
+
+#: extension.js:82
+msgid "English"
+msgstr "Anglès"
+
+#: extension.js:86
+msgid "Catalan"
+msgstr "Català"
+
+#: extension.js:90
+msgid "Spanish"
+msgstr "Castellà"
+
+#: extension.js:94
+msgid "Catalan (Valencian)"
+msgstr "Català (valencià)"
+
+#: extension.js:102
+msgid "French"
+msgstr "Francès"
+
+#: extension.js:110
+msgid "Portuguese"
+msgstr "Portuguès"
+
+#: extension.js:159
+msgid "Something went wrong (probably the langpair was not properly selected)"
+msgstr "S'ha produït un error (probablement el parell de llengües no s'ha seleccionat correctament)"
+
