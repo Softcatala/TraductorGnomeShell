@@ -84,51 +84,21 @@ TranslateText.prototype =
     //Langpairs
     let item;
 
-    //Language to translate From
-    item = new LangPair(_("English"), 'user-available');
-    this._combo.addMenuItem(item, 0);
-    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
+    var available_languages = new Array("English","Catalan", "Catalan (Valencian)","Spanish","Portuguese","Galician");
 
-    item = new LangPair(_("Catalan"), 'user-available');
-    this._combo.addMenuItem(item, 1);
-    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
+    for(i = 0; i < available_languages.length; i++) {
 
-    item = new LangPair(_("Spanish"), 'user-available');
-    this._combo.addMenuItem(item, 2);
-    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
+      //Language to translate From
+      item = new LangPair(_(available_languages[i]), 'user-available');
+      this._combo.addMenuItem(item, i);
+      this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
-    item = new LangPair(_("French"), 'user-available');
-    this._combo.addMenuItem(item, 3);
-    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
+      //Language to translate To
+      item = new LangPair(_(available_languages[i]), 'user-away');
+      this._comboTo.addMenuItem(item, i);
+      this._comboTo._itemActivated(item, Lang.bind(this, this._changeLangPairTo));
 
-    item = new LangPair(_("Portuguese"), 'user-available');
-    this._combo.addMenuItem(item, 4);
-    this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
-
-    //Language to translate To
-    item = new LangPair(_("English"), 'user-away');
-    this._comboTo.addMenuItem(item, 0);
-    this._comboTo._itemActivated(item, Lang.bind(this, this._changeLangPairTo));
-
-    item = new LangPair(_("Catalan"), 'user-away');
-    this._comboTo.addMenuItem(item, 1);
-    this._comboTo._itemActivated(item, Lang.bind(this, this._changeLangPairTo));
-
-    item = new LangPair(_("Catalan (Valencian)"), 'user-away');
-    this._comboTo.addMenuItem(item, 2);
-    this._comboTo._itemActivated(item, Lang.bind(this, this._changeLangPairTo));
-
-    item = new LangPair(_("Spanish"), 'user-away');
-    this._comboTo.addMenuItem(item, 3);
-    this._comboTo._itemActivated(item, Lang.bind(this, this._changeLangPairTo));
-
-    item = new LangPair(_("French"), 'user-away');
-    this._comboTo.addMenuItem(item, 4);
-    this._comboTo._itemActivated(item, Lang.bind(this, this._changeLangPairTo));
-
-    item = new LangPair(_("Portuguese"), 'user-away');
-    this._comboTo.addMenuItem(item, 5);
-    this._comboTo._itemActivated(item, Lang.bind(this, this._changeLangPairTo));
+    }
 
     this._combo.connect('active-item-changed', Lang.bind(this, this._changeLangPair));
     this._comboTo.connect('active-item-changed', Lang.bind(this, this._changeLangPairTo));
@@ -158,29 +128,8 @@ TranslateText.prototype =
         let  textToTranslate = o.get_text();
 
         /* Get the string and translate */
-        //let url = SCURL+languageFrom+'|'+languageTo+'&q='+textToTranslate;
-        let url = SCAPERTIUM+languageFrom+'|'+languageTo+'&q='+textToTranslate;
-        
-        var request = Soup.Message.new('GET', url);
-        
-        _httpSession.queue_message(request, function(_httpSession, message) {
 
-          var serverresponse = request.response_body.data;
-          var translation = JSON.parse(serverresponse);
-          var status_code = translation.responseStatus;
-          var response_details = translation.responseDetails;
-          
-          if (translation.responseData.translatedText && status_code == 200)
-            textTranslated = translation.responseData.translatedText;
-          else if (status_code != '200')
-            textTranslated = response_details;
-          else
-            textTranslated = _("Something went wrong (probably the langpair was not properly selected)");
-
-          showMessage(textTranslated);
-
-          traductorMenu.close(); 
-        });
+        translateAction(textToTranslate, languageFrom, languageTo);
       }
     });
     
@@ -210,20 +159,28 @@ TranslateText.prototype =
     let langpaircode;
     switch(activeitem){
       case 0:
-        langpaircode = 'en';
+         langpaircode = 'en';
         break;
       case 1:
         langpaircode = 'ca';
         break;
       case 2:
-        langpaircode = 'es';
+        langpaircode = 'ca_valencia';
         break;
       case 3:
-        langpaircode = 'fr';
+        langpaircode = 'es';
         break;
       case 4:
+        langpaircode = 'fr';
+        break;
+      case 5:
         langpaircode = 'pt';
         break;
+      case 6:
+        langpaircode = 'ga';
+        break;
+      /*case 7:
+        langpaircode = 'it';*/
     }
 
     languageFrom = langpaircode;
@@ -250,6 +207,11 @@ TranslateText.prototype =
       case 5:
         langpaircode = 'pt';
         break;
+      case 6:
+        langpaircode = 'ga';
+        break;
+      /*case 7:
+        langpaircode = 'it';*/
     }
 
     languageTo = langpaircode;
@@ -283,7 +245,37 @@ function showMessage(text){
     St.Clipboard.get_default().set_text(text);
 }
 
+function translateAction(textToTranslate, languageFrom, languageTo){
+  //let url = SCURL+languageFrom+'|'+languageTo+'&q='+textToTranslate;
+  let url = SCAPERTIUM+languageFrom+'|'+languageTo+'&q='+textToTranslate;
+  
+  var request = Soup.Message.new('GET', url);
+  
+  _httpSession.queue_message(request, function(_httpSession, message) {
+
+    var serverresponse = request.response_body.data;
+    var translation = JSON.parse(serverresponse);
+    var status_code = translation.responseStatus;
+    var response_details = translation.responseDetails;
+    
+    if (translation.responseData.translatedText && status_code == 200)
+      textTranslated = translation.responseData.translatedText;
+    else if (status_code != '200')
+      textTranslated = response_details;
+    else if (status_code == '451'){
+
+    }
+    else
+      textTranslated = _("Something went wrong (probably the langpair was not properly selected)");
+
+    showMessage(textTranslated);
+
+    traductorMenu.close(); 
+  });
+}
+
 // Init function
 function init(metadata){   
   return new TranslateText(metadata);
 }
+
