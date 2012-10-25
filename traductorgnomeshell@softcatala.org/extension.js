@@ -25,6 +25,7 @@ var languageFrom = 'en'; //Translate from English by default
 var languageTo = 'ca'; //Translate to Catalan by default
 
 let text, button;
+let todo, meta;
 
 // TranslateText function
 function TranslateText(metadata)
@@ -223,14 +224,10 @@ TranslateText.prototype =
       text = null;
   },
   
-  enable: function(){
-    Main.panel._rightBox.insert_child_at_index(this.actor, 0);
-    Main.panel._menus.addMenu(this.menu);
+  _enable: function(){
   },
 
-  disable: function(){
-    Main.panel._menus.removeMenu(this.menu);
-    Main.panel._rightBox.remove_actor(this.actor);
+  _disable: function(){
     this.monitor.cancel();
   }
 }
@@ -269,13 +266,26 @@ function translateAction(textToTranslate, languageFrom, languageTo){
       textTranslated = _("Something went wrong (probably the langpair was not properly selected)");
 
     showMessage(textTranslated);
-
-    traductorMenu.close(); 
   });
 }
 
 // Init function
-function init(metadata){   
-  return new TranslateText(metadata);
+function init(metadata)
+{ 
+meta = metadata;
+}
+
+function enable()
+{
+todo = new TranslateText(meta);
+todo._enable();
+Main.panel.addToStatusArea('T', todo);
+}
+
+function disable()
+{
+todo._disable();
+todo.destroy();
+todo = null;
 }
 

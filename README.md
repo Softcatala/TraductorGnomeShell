@@ -12,12 +12,18 @@ At this moment, language pairs available are:
 * es ⇆ ca (and es » ca_valencia)
 * es ⇆ pt
 * pt ⇆ ca
+* en » gl
 
-This extension uses the Softcatalà translator to retrieve the translations (www.softcatala.org/traductor).
-
-Softcatalà translator uses the "Apertium" technology (www.apertium.org).
+This extension uses the Apertium translator to retrieve the translations (www.apertium.org).
 
 INSTALL
+
+Quick way...
+
+Go to https://extensions.gnome.org/extension/397/traductor-gnome-shell/ and enable the extension.
+
+
+... or copy the code directly into your gnome-shell extensions folder
 
 1. Download the main folder (traductorgnomeshell@softcatala.org)
 2. Place it on your /home/user/.local/share/gnome-shell/extensions folder
