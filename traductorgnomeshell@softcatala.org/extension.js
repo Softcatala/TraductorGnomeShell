@@ -15,21 +15,25 @@ const _httpSession = new Soup.SessionAsync();
 const Gettext = imports.gettext;
 const _ = Gettext.domain('traductorgnomeshell').gettext;
 
-const apiKey = 'NzFkNTc4NTQ0OWI1MDY0ZTk3ZDF';
-const apertiumKey = 'HXoGDcuXSAkpZuo8S/YbrsB9RA0';
-const SCURL = 'http://www.softcatala.org/apertium/json/translate?markUnknown=yes&key='+apiKey+'&langpair=';
-const SCAPERTIUM = 'http://api.apertium.org/json/translate?markUnknown=yes&key='+apertiumKey+'&langpair=';
 Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefault());
+
+const GOOGLEURL = 'http://translate.google.com/translate_a/t?client=j&ie=UTF-8&oe=UTF-8';
+const SENTENCES_REGEXP = /\n|([^\r\n.!?]+([.!?]+|\n|$))/gim;
+
+const Me = imports.misc.extensionUtils.getCurrentExtension();
+const Languages = Me.imports.languages;
+const Utils = Me.imports.utils;
+
 
 var languageFrom = 'en'; //Translate from English by default
 var languageTo = 'ca'; //Translate to Catalan by default
+let textTranslated
 
 let text, button;
 let todo, meta;
 
 // TranslateText function
-function TranslateText(metadata)
-{ 
+function TranslateText(metadata) { 
   let locales = metadata.path + "/locale";
   Gettext.bindtextdomain('traductorgnomeshell', locales);
 
@@ -61,12 +65,10 @@ LangPair.prototype = {
 };
 
 // TranslateText main class
-TranslateText.prototype =
-{
+TranslateText.prototype = {
   __proto__: PanelMenu.Button.prototype,
   
-  _init: function() 
-  {     
+  _init: function() {     
     PanelMenu.Button.prototype._init.call(this, St.Align.START);
 
     this.buttonText = new St.Label({text:'T'});
@@ -85,20 +87,24 @@ TranslateText.prototype =
     //Langpairs
     let item;
 
-    var available_languages = new Array("English","Catalan", "Catalan (Valencian)","Spanish","Portuguese","Galician");
+    //var available_languages = new Array("English","Catalan", "Catalan (Valencian)","Spanish","Portuguese","Galician");
 
-    for(i = 0; i < available_languages.length; i++) {
+    var available_languages = Languages.getLanguages();
+
+    let i = 0;
+    //for(i = 0; i < available_languages.length; i++) {
+    for (lang in available_languages) {
 
       //Language to translate From
-      item = new LangPair(_(available_languages[i]), 'user-available');
+      item = new LangPair(_(available_languages[lang]), 'user-available');
       this._combo.addMenuItem(item, i);
       this._combo._itemActivated(item, Lang.bind(this, this._changeLangPair));
 
       //Language to translate To
-      item = new LangPair(_(available_languages[i]), 'user-away');
+      item = new LangPair(_(available_languages[lang]), 'user-away');
       this._comboTo.addMenuItem(item, i);
       this._comboTo._itemActivated(item, Lang.bind(this, this._changeLangPairTo));
-
+      i++;
     }
 
     this._combo.connect('active-item-changed', Lang.bind(this, this._changeLangPair));
@@ -122,10 +128,9 @@ TranslateText.prototype =
     });
 
     let entryText = this.newText.clutter_text;
-    entryText.connect('key-press-event', function(o,e){
+    entryText.connect('key-press-event', function(o,e) {
       let symbol = e.get_key_symbol();
-      if (symbol == Clutter.Return)
-      {
+      if (symbol == Clutter.Return) {
         let  textToTranslate = o.get_text();
 
         /* Get the string and translate */
@@ -139,153 +144,117 @@ TranslateText.prototype =
     traductorMenu.addMenuItem(bottomSection);
   },
 
-  _changeLangPair: function(item){
+  _changeLangPair: function(item) {
     //Retrieve the item position
     let activeitem = item._activeItemPos;
     this._setLangPair(activeitem);
   },
 
-  _changeLangPairTo: function(item){
+  _changeLangPairTo: function(item) {
     //Retrieve the item position
     let activeitem = item._activeItemPos;
     this._setLangPairTo(activeitem);
   },
-  
 
-  _translate: function(){
-    
-  },
-
-  _setLangPair: function(activeitem){
+  _setLangPair: function(activeitem) {
     let langpaircode;
-    switch(activeitem){
-      case 0:
-         langpaircode = 'en';
-        break;
-      case 1:
-        langpaircode = 'ca';
-        break;
-      case 2:
-        langpaircode = 'ca_valencia';
-        break;
-      case 3:
-        langpaircode = 'es';
-        break;
-      case 4:
-        langpaircode = 'fr';
-        break;
-      case 5:
-        langpaircode = 'pt';
-        break;
-      case 6:
-        langpaircode = 'ga';
-        break;
-      /*case 7:
-        langpaircode = 'it';*/
-    }
-
+    langpaircode = Languages.getLangCode(activeitem);
     languageFrom = langpaircode;
   },
 
-  _setLangPairTo: function(activeitem){
+  _setLangPairTo: function(activeitem) {
     let langpaircode;
-    switch(activeitem){
-      case 0:
-         langpaircode = 'en';
-        break;
-      case 1:
-        langpaircode = 'ca';
-        break;
-      case 2:
-        langpaircode = 'ca_valencia';
-        break;
-      case 3:
-        langpaircode = 'es';
-        break;
-      case 4:
-        langpaircode = 'fr';
-        break;
-      case 5:
-        langpaircode = 'pt';
-        break;
-      case 6:
-        langpaircode = 'ga';
-        break;
-      /*case 7:
-        langpaircode = 'it';*/
-    }
-
+    langpaircode = Languages.getLangCode(activeitem);
     languageTo = langpaircode;
   },
 
 
-  _hideMessage: function(){
+  _hideMessage: function() {
       Main.uiGroup.remove_actor(text);
       text = null;
   },
   
-  _enable: function(){
+  _enable: function() {
   },
 
-  _disable: function(){
+  _disable: function() {
     this.monitor.cancel();
   }
 }
 
-function showMessage(text){ 
+function showMessage(text) { 
     let source = new MessageTray.SystemNotificationSource();
     Main.messageTray.add(source);
     let notification = new MessageTray.Notification(source, text, null);
     notification.setTransient(true);
     source.notify(notification);
 
-    St.Clipboard.get_default().set_text(text);
+    //St.Clipboard.get_default().set_text(text);
 }
+
+function parse_response(response_data) {
+        let json;
+        let result = '';
+
+        try {
+            json = JSON.parse(response_data);
+        }
+        catch(e) {
+            log('%s Error: %s'.format(
+                this.name,
+                JSON.stringify(e, null, '\t')+"\nResponse_data:\n"+response_data
+            ));
+            return {
+                error: true,
+                message: "Can't translate text, please try later."
+            };
+        }
+
+        if(json.dict != undefined) {
+            result = this._markup_dict(json.dict);
+            result = '%s\n\n%s'.format(json.sentences[0].trans, result);
+        }
+        else {
+            for(let i = 0; i < json.sentences.length; i++) {
+                result += json.sentences[i].trans;
+            }
+            result = Utils.escape_html(result);
+        }
+
+        return result;
+    }
 
 function translateAction(textToTranslate, languageFrom, languageTo){
   //let url = SCURL+languageFrom+'|'+languageTo+'&q='+textToTranslate;
-  let url = SCAPERTIUM+languageFrom+'|'+languageTo+'&q='+textToTranslate;
+  //let url = SCAPERTIUM+languageFrom+'|'+languageTo+'&q='+textToTranslate;
+  let url = GOOGLEURL + '&sl=' + languageFrom + '&tl=' + languageTo + '&text=' + textToTranslate;
   
   var request = Soup.Message.new('GET', url);
   
   _httpSession.queue_message(request, function(_httpSession, message) {
 
     var serverresponse = request.response_body.data;
-    var translation = JSON.parse(serverresponse);
-    var status_code = translation.responseStatus;
-    var response_details = translation.responseDetails;
-    
-    if (translation.responseData.translatedText && status_code == 200)
-      textTranslated = translation.responseData.translatedText;
-    else if (status_code != '200')
-      textTranslated = response_details;
-    else if (status_code == '451'){
 
-    }
-    else
-      textTranslated = _("Something went wrong (probably the langpair was not properly selected)");
+    textTranslated = parse_response(serverresponse);
 
     showMessage(textTranslated);
   });
 }
 
 // Init function
-function init(metadata)
-{ 
-meta = metadata;
+function init(metadata){ 
+  meta = metadata;
 }
 
-function enable()
-{
-todo = new TranslateText(meta);
-todo._enable();
-Main.panel.addToStatusArea('T', todo);
+function enable(){
+  todo = new TranslateText(meta);
+  todo._enable();
+  Main.panel.addToStatusArea('T', todo);
 }
 
-function disable()
-{
-todo._disable();
-todo.destroy();
-todo = null;
+function disable(){
+  todo._disable();
+  todo.destroy();
+  todo = null;
 }
 

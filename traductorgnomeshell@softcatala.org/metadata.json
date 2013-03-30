@@ -5,11 +5,9 @@
 	    "3.4",
 	    "3.4.1",
 	    "3.4.2",
-	    "3.5.4",
-	    "3.5.5",
-            "3.5.90",
-            "3.5.91",
-	    "3.6"
+	    "3.6",
+	    "3.7.92",
+	    "3.8"
 	  ],
 	"uuid": "traductorgnomeshell@softcatala.org", 
 	"name": "Traductor Gnome-Shell", 
