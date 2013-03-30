@@ -1,20 +1,7 @@
 TraductorGnomeShell
 ===================
 
-This is a gnome-shell extension that let users enter a text, select the language pair for the translation and translate the text.
-
-At this moment, language pairs available are:
-
-* en ⇆ ca
-* en ⇆ es
-* fr ⇆ ca
-* fr ⇆ es
-* es ⇆ ca (and es » ca_valencia)
-* es ⇆ pt
-* pt ⇆ ca
-* en » gl
-
-This extension uses the Apertium translator to retrieve the translations (www.apertium.org).
+This is a gnome-shell extension that let users enter a text, select the language pair for the translation and translate. It uses Google Translate engine. the text.
 
 INSTALL
 
